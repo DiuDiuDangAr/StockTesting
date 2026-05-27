@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>股票與 ETF 入門觀念小測驗</title>
+    <style>
+        /* 針對長輩優化的親和樣式 */
+        :root {
+            --primary-color: #1a73e8;
+            --success-color: #2e7d32;
+            --error-color: #c62828;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #202124;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 20px;
+            /* 加大基礎字體 */
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            height: 12px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: #34a853;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        /* 加大選項按鈕，方便長輩手指點擊 */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #f1f3f4;
+            border: 2px solid #dadce0;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .option-btn:active {
+            background-color: #e8f0fe;
+        }
+
+        .option-btn.selected {
+            background-color: #e8f0fe;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .option-index {
+            background-color: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option-btn.selected .option-index {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* 導覽按鈕區 */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: auto;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: #fff;
+            border: 2px solid #dadce0;
+            color: #5f6368;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #34a853;
+            color: white;
+        }
+
+        /* 結果頁面樣式 */
+        .result-score {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            color: var(--primary-color);
+        }
+
+        .review-item {
+            border: 1px solid #dadce0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background-color: #fafafa;
+        }
+
+        .review-q {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .review-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .status-correct {
+            background-color: #e6f4ea;
+            color: var(--success-color);
+        }
+
+        .status-wrong {
+            background-color: #fce8e6;
+            color: var(--error-color);
+        }
+
+        .review-ans {
+            font-size: 18px;
+            margin: 6px 0;
+        }
+
+        .review-explain {
+            font-size: 18px;
+            color: #5f6368;
+            background-color: #f1f3f4;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header id="header-area">
+            <h1 id="page-title">股票與 ETF 知識小測驗</h1>
+            <div class="progress-bar" id="progress-container">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </header>
+
+        <div class="card" id="quiz-card">
+            <div id="question-area">
+                <div class="question-text" id="question-text">正在讀取題庫，請稍候...</div>
+                <div class="options-container" id="options-container"></div>
+            </div>
+
+            <div id="result-area" class="hidden">
+                <div class="result-score" id="result-score-text"></div>
+                <button class="btn btn-primary" onclick="startNewQuiz()"
+                    style="margin-bottom: 24px; width: 100%;">再測驗一次</button>
+                <hr style="border: 0; border-top: 1px solid #dadce0; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px;">題目解析回顧：</h3>
+                <div id="review-container"></div>
+            </div>
+
+            <div class="nav-container" id="nav-container">
+                <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>上一題</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">下一題</button>
+                <button class="btn btn-success hidden" id="submit-btn" onclick="submitQuiz()">提交看結果</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
