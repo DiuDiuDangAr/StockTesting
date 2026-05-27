@@ -7,18 +7,19 @@ let userAnswers = [];
 let currentIndex = 0;
 
 // 非同步載入 JSON 檔案
+// 非同步載入 JSON 檔案（相容本地與 GitHub Pages 版）
 async function loadQuestionBank() {
     try {
-        const response = await fetch('questions.json');
+        // 使用 ./ 確保從當前目錄的相對路徑抓取，避免路徑被當成根目錄
+        const response = await fetch('./questions.json'); 
         if (!response.ok) {
             throw new Error('無法讀取題庫內容，請檢查 questions.json 檔案是否存在。');
         }
         questionBankRaw = await response.json();
-        // 成功取得題庫後，自動開始第一次測驗
         startNewQuiz();
     } catch (error) {
         console.error(error);
-        document.getElementById('question-text').innerText = "❌ 題庫載入失敗，請確認是否透過伺服器環境（如 Live Server）開啟網頁。";
+        document.getElementById('question-text').innerText = "❌ 題庫載入失敗，請確認 questions.json 是否與 index.html 在同一個資料夾，並已成功上傳。";
     }
 }
 
