@@ -6,20 +6,24 @@ let currentQuizQuestions = [];
 let userAnswers = [];
 let currentIndex = 0;
 
-// 非同步載入 JSON 檔案
-// 非同步載入 JSON 檔案（相容本地與 GitHub Pages 版）
+// 非同步載入 JSON 檔案（GitHub Pages 專用相容版）
 async function loadQuestionBank() {
     try {
-        // 使用 ./ 確保從當前目錄的相對路徑抓取，避免路徑被當成根目錄
-        const response = await fetch('./questions.json'); 
+        // 自動取得當前 index.html 所在的資料夾絕對路徑
+        const currentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        const jsonUrl = `${window.location.origin}${currentDir}/questions.json`;
+        
+        console.log("正在嘗試讀取題庫，路徑為:", jsonUrl); // 方便你按 F12 檢查路徑
+
+        const response = await fetch(jsonUrl);
         if (!response.ok) {
-            throw new Error('無法讀取題庫內容，請檢查 questions.json 檔案是否存在。');
+            throw new Error(`伺服器回應錯誤代碼: ${response.status}`);
         }
         questionBankRaw = await response.json();
         startNewQuiz();
     } catch (error) {
-        console.error(error);
-        document.getElementById('question-text').innerText = "❌ 題庫載入失敗，請確認 questions.json 是否與 index.html 在同一個資料夾，並已成功上傳。";
+        console.error("載入失敗詳細原因:", error);
+        document.getElementById('question-text').innerText = "❌ 題庫載入失敗，請確認 questions.json 是否已成功上傳且檔名全為小寫。";
     }
 }
 
